@@ -1,8 +1,6 @@
 package hungarianAlgorithm
 
 import (
-	"math"
-
 	"lukechampine.com/uint128"
 )
 
@@ -44,7 +42,7 @@ func (l *label) isTight(i int, j int) bool {
 // Assumes that each indices set is sorted and contains no duplicate.
 func (l *label) update(s []int, t []int) []edge {
 	// find the minimum slack
-	min := uint128.New(math.MaxUint64, math.MaxUint64)
+	min := uint128.Max
 	idx := 0
 	for j := 0; j < l.n; j++ {
 		if idx < len(t) && j == t[idx] {
