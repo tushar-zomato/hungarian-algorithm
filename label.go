@@ -1,18 +1,24 @@
 package hungarianAlgorithm
 
+import (
+	"math"
+
+	"lukechampine.com/uint128"
+)
+
 type label struct {
 	n      int
-	costs  [][]int //costs
-	left   []int   // labels on the rows
-	right  []int   // labels on the columns
-	slack  []int   // min slack
-	slackI []int   // min slack index
+	costs  [][]uint128.Uint128 //costs
+	left   []uint128.Uint128   // labels on the rows
+	right  []uint128.Uint128   // labels on the columns
+	slack  []uint128.Uint128   // min slack
+	slackI []int               // min slack index
 }
 
-func makeLabel(n int, costs [][]int) label {
-	left := make([]int, n)
-	right := make([]int, n)
-	slack := make([]int, n)
+func makeLabel(n int, costs [][]uint128.Uint128) label {
+	left := make([]uint128.Uint128, n)
+	right := make([]uint128.Uint128, n)
+	slack := make([]uint128.Uint128, n)
 	slackI := make([]int, n)
 	return label{n, costs, left, right, slack, slackI}
 }
@@ -22,7 +28,7 @@ func (l *label) initialize() {
 	for i := 0; i < l.n; i++ {
 		l.left[i] = l.costs[i][0]
 		for j := 1; j < l.n; j++ {
-			if l.costs[i][j] < l.left[i] {
+			if l.costs[i][j].Cmp(l.left[i]) < 0 {
 				l.left[i] = l.costs[i][j]
 			}
 		}
@@ -31,14 +37,14 @@ func (l *label) initialize() {
 
 // Returns whether a given edge is tight
 func (l *label) isTight(i int, j int) bool {
-	return l.costs[i][j]-l.left[i]-l.right[j] == 0
+	return l.costs[i][j].Sub(l.left[i]).Sub(l.right[j]).IsZero()
 }
 
 // Given a set s of row indices and a set of column indices update the labels.
 // Assumes that each indices set is sorted and contains no duplicate.
 func (l *label) update(s []int, t []int) []edge {
 	// find the minimum slack
-	min := -1
+	min := uint128.New(math.MaxUint64, math.MaxUint64)
 	idx := 0
 	for j := 0; j < l.n; j++ {
 		if idx < len(t) && j == t[idx] {
@@ -46,18 +52,18 @@ func (l *label) update(s []int, t []int) []edge {
 			continue
 		}
 		sl := l.slack[j]
-		if min == -1 || sl < min {
+		if sl.Cmp(min) < 0 {
 			min = sl
 		}
 	}
 
 	// increase the label on the elements of s
 	for _, i := range s {
-		l.left[i] += min
+		l.left[i] = l.left[i].Add(min)
 	}
 	// decrease the label on the elements of t
 	for _, i := range t {
-		l.right[i] -= min
+		l.right[i] = l.right[i].Sub(min)
 	}
 
 	// decrease each slack by min and cache the tight edges
@@ -68,8 +74,8 @@ func (l *label) update(s []int, t []int) []edge {
 			idx++
 			continue
 		}
-		l.slack[j] -= min
-		if l.slack[j] == 0 {
+		l.slack[j] = l.slack[j].Sub(min)
+		if l.slack[j].IsZero() {
 			edges = append(edges, edge{l.slackI[j], j})
 		}
 	}
@@ -80,9 +86,9 @@ func (l *label) update(s []int, t []int) []edge {
 func (l *label) initializeSlacks(i int) []edge {
 	edges := make([]edge, 0, l.n)
 	for j := 0; j < l.n; j++ {
-		l.slack[j] = l.costs[i][j] - l.left[i] - l.right[j]
+		l.slack[j] = l.costs[i][j].Sub(l.left[i]).Sub(l.right[j])
 		l.slackI[j] = i
-		if l.slack[j] == 0 {
+		if l.slack[j].IsZero() {
 			edges = append(edges, edge{i, j})
 		}
 	}
@@ -92,11 +98,11 @@ func (l *label) initializeSlacks(i int) []edge {
 func (l *label) updateSlacks(i int) []edge {
 	edges := make([]edge, 0, l.n)
 	for j := 0; j < l.n; j++ {
-		s := l.costs[i][j] - l.left[i] - l.right[j]
-		if s < l.slack[j] {
+		s := l.costs[i][j].Sub(l.left[i]).Sub(l.right[j])
+		if s.Cmp(l.slack[j]) < 0 {
 			l.slack[j] = s
 			l.slackI[j] = i
-			if l.slack[j] == 0 {
+			if l.slack[j].IsZero() {
 				edges = append(edges, edge{i, j})
 			}
 		}

@@ -2,10 +2,11 @@ package hungarianAlgorithm
 
 import (
 	"errors"
-	"fmt"
+
+	"lukechampine.com/uint128"
 )
 
-func validate(costs [][]int) error {
+func validate(costs [][]uint128.Uint128) error {
 	n := len(costs)
 
 	if n == 0 {
@@ -14,14 +15,6 @@ func validate(costs [][]int) error {
 
 	if m := len(costs[0]); m != n {
 		return errors.New("The costs matrix is not square.")
-	}
-
-	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
-			if costs[i][j] < 0 {
-				return fmt.Errorf("The coefficient (%d,%d) is negative.", i, j)
-			}
-		}
 	}
 
 	return nil

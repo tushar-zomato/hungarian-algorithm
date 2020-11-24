@@ -1,8 +1,12 @@
 package hungarianAlgorithm
 
+import (
+	"lukechampine.com/uint128"
+)
+
 // Returns the solution as an array `a` such that each row `i` is matched to
 // column `a[i]`
-func Solve(costs [][]int) ([]int, error) {
+func Solve(costs [][]uint128.Uint128) ([]int, error) {
 	// Validate the input
 	if err := validate(costs); err != nil {
 		return []int{}, err
