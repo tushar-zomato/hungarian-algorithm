@@ -3,10 +3,10 @@ package hungarianAlgorithm
 import (
 	"errors"
 
-	"lukechampine.com/uint128"
+	"github.com/shabbyrobe/go-num"
 )
 
-func validate(costs [][]uint128.Uint128) error {
+func validate(costs [][]num.I128) error {
 	n := len(costs)
 
 	if n == 0 {

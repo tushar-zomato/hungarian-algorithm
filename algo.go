@@ -1,12 +1,10 @@
 package hungarianAlgorithm
 
-import (
-	"lukechampine.com/uint128"
-)
+import "github.com/shabbyrobe/go-num"
 
 // Returns the solution as an array `a` such that each row `i` is matched to
 // column `a[i]`
-func Solve(costs [][]uint128.Uint128) ([]int, error) {
+func Solve(costs [][]num.I128) ([]int, error) {
 	// Validate the input
 	if err := validate(costs); err != nil {
 		return []int{}, err

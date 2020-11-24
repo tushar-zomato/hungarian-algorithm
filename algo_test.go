@@ -4,32 +4,32 @@ import (
 	"reflect"
 	"testing"
 
-	"lukechampine.com/uint128"
+	"github.com/shabbyrobe/go-num"
 )
 
 type testCase struct {
-	in   [][]uint128.Uint128
+	in   [][]num.I128
 	want []int
 }
 
 func TestSolve(t *testing.T) {
 	cases := []testCase{
 		{
-			in: [][]uint128.Uint128{
-				{uint128.From64(11), uint128.From64(6), uint128.From64(12)},
-				{uint128.From64(12), uint128.From64(4), uint128.From64(6)},
-				{uint128.From64(8), uint128.From64(12), uint128.From64(11)},
+			in: [][]num.I128{
+				{num.I128From64(11), num.I128From64(6), num.I128From64(12)},
+				{num.I128From64(12), num.I128From64(4), num.I128From64(6)},
+				{num.I128From64(8), num.I128From64(12), num.I128From64(11)},
 			},
 			want: []int{1, 2, 0},
 		},
 		{
-			in: [][]uint128.Uint128{
-				{uint128.From64(13), uint128.From64(13), uint128.From64(19), uint128.From64(50), uint128.From64(33), uint128.From64(38)},
-				{uint128.From64(73), uint128.From64(33), uint128.From64(71), uint128.From64(77), uint128.From64(97), uint128.From64(95)},
-				{uint128.From64(20), uint128.From64(8), uint128.From64(56), uint128.From64(55), uint128.From64(64), uint128.From64(35)},
-				{uint128.From64(26), uint128.From64(25), uint128.From64(72), uint128.From64(32), uint128.From64(55), uint128.From64(77)},
-				{uint128.From64(83), uint128.From64(40), uint128.From64(69), uint128.From64(3), uint128.From64(53), uint128.From64(49)},
-				{uint128.From64(67), uint128.From64(20), uint128.From64(44), uint128.From64(29), uint128.From64(86), uint128.From64(61)},
+			in: [][]num.I128{
+				{num.I128From64(13), num.I128From64(13), num.I128From64(19), num.I128From64(50), num.I128From64(33), num.I128From64(38)},
+				{num.I128From64(73), num.I128From64(33), num.I128From64(71), num.I128From64(77), num.I128From64(97), num.I128From64(95)},
+				{num.I128From64(20), num.I128From64(8), num.I128From64(56), num.I128From64(55), num.I128From64(64), num.I128From64(35)},
+				{num.I128From64(26), num.I128From64(25), num.I128From64(72), num.I128From64(32), num.I128From64(55), num.I128From64(77)},
+				{num.I128From64(83), num.I128From64(40), num.I128From64(69), num.I128From64(3), num.I128From64(53), num.I128From64(49)},
+				{num.I128From64(67), num.I128From64(20), num.I128From64(44), num.I128From64(29), num.I128From64(86), num.I128From64(61)},
 			},
 			want: []int{4, 1, 5, 0, 3, 2},
 		},

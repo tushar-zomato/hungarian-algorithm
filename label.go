@@ -1,22 +1,22 @@
 package hungarianAlgorithm
 
 import (
-	"lukechampine.com/uint128"
+	"github.com/shabbyrobe/go-num"
 )
 
 type label struct {
 	n      int
-	costs  [][]uint128.Uint128 //costs
-	left   []uint128.Uint128   // labels on the rows
-	right  []uint128.Uint128   // labels on the columns
-	slack  []uint128.Uint128   // min slack
-	slackI []int               // min slack index
+	costs  [][]num.I128 //costs
+	left   []num.I128   // labels on the rows
+	right  []num.I128   // labels on the columns
+	slack  []num.I128   // min slack
+	slackI []int        // min slack index
 }
 
-func makeLabel(n int, costs [][]uint128.Uint128) label {
-	left := make([]uint128.Uint128, n)
-	right := make([]uint128.Uint128, n)
-	slack := make([]uint128.Uint128, n)
+func makeLabel(n int, costs [][]num.I128) label {
+	left := make([]num.I128, n)
+	right := make([]num.I128, n)
+	slack := make([]num.I128, n)
 	slackI := make([]int, n)
 	return label{n, costs, left, right, slack, slackI}
 }
@@ -42,7 +42,7 @@ func (l *label) isTight(i int, j int) bool {
 // Assumes that each indices set is sorted and contains no duplicate.
 func (l *label) update(s []int, t []int) []edge {
 	// find the minimum slack
-	min := uint128.Max
+	min := num.MaxI128
 	idx := 0
 	for j := 0; j < l.n; j++ {
 		if idx < len(t) && j == t[idx] {
